@@ -29,6 +29,7 @@ public class InteractionMultiAgent {
         grille.affichage();
         System.out.println("Début execution");
         ExecutorService executor = Executors.newCachedThreadPool();
+        //TODO Remplacer sleep par un truc mieux
         executor.execute(soleil);
         sleep(100);
         executor.execute(sablier);

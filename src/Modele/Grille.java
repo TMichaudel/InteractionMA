@@ -30,7 +30,7 @@ public class Grille {
     }
 
     public Symboles getCase(int x, int y) {
-        if ((x < taille) && (x > 0) && (y < taille) && (y > 0)) {
+        if ((x < taille) && (x >= 0) && (y < taille) && (y >= 0)) {
             return grille[x][y].getSymbole();
         } else {
             return Symboles.OBSTACLE;
@@ -46,7 +46,7 @@ public class Grille {
     }
 
     public void affichage() {
-        System.out.println("________");
+        System.out.println("__________");
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 switch (grille[i][j].getSymbole()) {
