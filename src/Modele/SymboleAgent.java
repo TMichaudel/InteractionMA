@@ -32,7 +32,6 @@ public class SymboleAgent extends Thread{
     @Override
     public void run(){
         while(!grille.isComplete){
-            System.out.println(grille.getCase(posX+1, posY));
             if((posX<posFinaleX)&&(grille.getCase(posX+1, posY).equals(Symboles.VIDE))) {
                 posX++;
                 grille.setCase(posX, posY, this);
@@ -54,9 +53,6 @@ public class SymboleAgent extends Thread{
                 grille.setCaseVide(posX, posY+1);
             }
             else {
-                System.out.println("aa");
-                System.out.println(grille.getCase(posX+1, posY));
-                System.out.println(grille.getCase(posX+1, posY).equals(Symboles.VIDE));
             }
             
             grille.affichage();

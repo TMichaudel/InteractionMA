@@ -8,6 +8,8 @@ package Simulation;
 import Modele.Grille;
 import Modele.SymboleAgent;
 import Modele.Symboles;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -23,10 +25,14 @@ public class InteractionMultiAgent {
         SymboleAgent soleil = new SymboleAgent(0,3,0,1,grille,Symboles.SOLEIL);
         SymboleAgent sablier = new SymboleAgent(1,2,4,4,grille,Symboles.SABLIER);
         SymboleAgent etoile = new SymboleAgent(2,3,3,0,grille,Symboles.ETOILE);
-        soleil.run();
-        sablier.run();
-        etoile.run();
         grille.affichage();
+        System.out.println("Début execution");
+        ExecutorService executor = Executors.newCachedThreadPool();
+        executor.execute(soleil);
+        executor.execute(sablier);
+        executor.execute(etoile);
+
+
     }
     
 }
