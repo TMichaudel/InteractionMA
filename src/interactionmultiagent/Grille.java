@@ -18,8 +18,8 @@ public class Grille {
     public Grille() {
         grille = new SymboleAgent[taille][taille];
         isComplete = false;
-        for (int i = 0; i < taille - 1; i++) {
-            for (int j = 0; j < taille - 1; j++) {
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
                 grille[i][j] = new SymboleAgent(i, j, 0, 0, this, Symboles.VIDE);
             }
         }
@@ -47,8 +47,8 @@ public class Grille {
 
     public void affichage() {
         System.out.println("________");
-        for (int i = 0; i < taille - 1; i++) {
-            for (int j = 0; j < taille - 1; j++) {
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
                 switch (grille[i][j].getSymbole()) {
                     case VIDE:
                         System.out.print(" ");
