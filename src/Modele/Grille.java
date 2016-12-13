@@ -5,6 +5,8 @@
  */
 package Modele;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author thiba
@@ -14,10 +16,14 @@ public class Grille {
     private SymboleAgent[][] grille;
     private int taille = 5;
     public boolean isComplete;
+    private int idMessage;
+    private ArrayList<Message> listeMessages;
 
     public Grille() {
         grille = new SymboleAgent[taille][taille];
+        idMessage=0;
         isComplete = false;
+        listeMessages=new ArrayList();
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 grille[i][j] = new SymboleAgent(i, j, 0, 0, this, Symboles.VIDE);
@@ -45,6 +51,17 @@ public class Grille {
         grille[x][y] = new SymboleAgent(x, y, 0, 0, this, Symboles.VIDE);
     }
 
+    public int getIdMessage() {
+        return idMessage;
+    }
+    
+    public void incrementIdMessage(){
+        idMessage++;
+    }
+    
+    public void addMessage(Message m){
+        listeMessages.add(m);
+    }
     public void affichage() {
         System.out.println("__________");
         for (int i = 0; i < taille; i++) {
