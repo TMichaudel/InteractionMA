@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interactionmultiagent;
+package Modele;
 
 /**
  *
@@ -32,25 +32,31 @@ public class SymboleAgent extends Thread{
     @Override
     public void run(){
         while(!grille.isComplete){
-            if((posX<posFinaleX)&&(grille.getCase(posX+1, posY)==Symboles.VIDE)) {
+            System.out.println(grille.getCase(posX+1, posY));
+            if((posX<posFinaleX)&&(grille.getCase(posX+1, posY).equals(Symboles.VIDE))) {
                 posX++;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX-1, posY);
             }
-            else if((posX>posFinaleX)&&(grille.getCase(posX-1, posY)==Symboles.VIDE)) {
+            else if((posX>posFinaleX)&&(grille.getCase(posX-1, posY).equals(Symboles.VIDE))) {
                 posX--;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX+1, posY);
             }
-            else if((posY<posFinaleY)&&(grille.getCase(posX, posY+1)==Symboles.VIDE)) {
+            else if((posY<posFinaleY)&&(grille.getCase(posX, posY+1).equals(Symboles.VIDE))) {
                 posY++;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX, posY-1);
             }
-            else if((posY>posFinaleY)&&(grille.getCase(posX, posY-1)==Symboles.VIDE)) {
+            else if((posY>posFinaleY)&&(grille.getCase(posX, posY-1).equals(Symboles.VIDE))) {
                 posY++;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX, posY+1);
+            }
+            else {
+                System.out.println("aa");
+                System.out.println(grille.getCase(posX+1, posY));
+                System.out.println(grille.getCase(posX+1, posY).equals(Symboles.VIDE));
             }
             
             grille.affichage();
