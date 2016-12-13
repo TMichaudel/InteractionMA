@@ -5,6 +5,9 @@
  */
 package Modele;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author thiba
@@ -58,6 +61,11 @@ public class SymboleAgent extends Thread{
             grille.affichage();
             if((posX==posFinaleX)&&(posY==posFinaleY)){
                 isSatisfied=true;
+            }
+            try {
+                this.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SymboleAgent.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

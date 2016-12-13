@@ -8,6 +8,7 @@ package Simulation;
 import Modele.Grille;
 import Modele.SymboleAgent;
 import Modele.Symboles;
+import static java.lang.Thread.sleep;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,7 +21,7 @@ public class InteractionMultiAgent {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Grille grille = new Grille();
         SymboleAgent soleil = new SymboleAgent(0,3,0,1,grille,Symboles.SOLEIL);
         SymboleAgent sablier = new SymboleAgent(1,2,4,4,grille,Symboles.SABLIER);
@@ -29,7 +30,9 @@ public class InteractionMultiAgent {
         System.out.println("Début execution");
         ExecutorService executor = Executors.newCachedThreadPool();
         executor.execute(soleil);
+        sleep(100);
         executor.execute(sablier);
+        sleep(100);
         executor.execute(etoile);
 
 
