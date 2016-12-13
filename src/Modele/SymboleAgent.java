@@ -49,7 +49,7 @@ public class SymboleAgent extends Thread{
                 grille.setCaseVide(posX, posY-1);
             }
             else if((posY>posFinaleY)&&(grille.getCase(posX, posY-1).equals(Symboles.VIDE))) {
-                posY++;
+                posY--;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX, posY+1);
             }
