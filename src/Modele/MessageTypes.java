@@ -10,5 +10,5 @@ package Modele;
  * @author thiba
  */
 public enum MessageTypes {
-    DEPLACEMENT,OUI,NON
+    DEPLACEMENT,OUI,NON,TRAITE,NOTANSWERED
 }

@@ -21,9 +21,9 @@ public class Grille {
 
     public Grille() {
         grille = new SymboleAgent[taille][taille];
-        idMessage=0;
+        idMessage = 0;
         isComplete = false;
-        listeMessages=new ArrayList();
+        listeMessages = new ArrayList();
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 grille[i][j] = new SymboleAgent(i, j, 0, 0, this, Symboles.VIDE);
@@ -54,13 +54,48 @@ public class Grille {
     public int getIdMessage() {
         return idMessage;
     }
-    
-    public void incrementIdMessage(){
+
+    public void incrementIdMessage() {
         idMessage++;
     }
-    
-    public void addMessage(Message m){
+
+    public void addMessage(Message m) {
         listeMessages.add(m);
+    }
+
+    public ArrayList<Message> getReponses(Symboles s) {
+        ArrayList<Message> result = new ArrayList();
+        for (Message m : this.listeMessages) {
+            if ((m.getEmetteur().equals(s)) && !(m.getType().equals(MessageTypes.TRAITE))) {
+                result.add(m);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Message> getMessages(Symboles s) {
+        ArrayList<Message> result = new ArrayList();
+        for (Message m : this.listeMessages) {
+            if ((m.getRecepteur().equals(s)) && !(m.getType().equals(MessageTypes.TRAITE))) {
+                result.add(m);
+            }
+        }
+        return result;
+    }
+
+    public void checkVictory(){
+        boolean test=true;
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                SymboleAgent a=grille[i][j];
+                if(!a.getSymbole().equals(Symboles.VIDE)){
+                    if((a.getPosX()!=a.getPosFinaleX())||(a.getPosY()!=a.getPosFinaleY())){
+                        test=false;
+                    }
+                }
+            }
+        }
+        this.isComplete=test;
     }
     public void affichage() {
         System.out.println("__________");

@@ -77,6 +77,7 @@ public class SymboleAgent extends Thread {
             if ((posX == posFinaleX) && (posY == posFinaleY)) {
                 isSatisfied = true;
             }
+            grille.checkVictory();
             try {
                 this.sleep(1000);
             } catch (InterruptedException ex) {
@@ -85,6 +86,22 @@ public class SymboleAgent extends Thread {
         }
     }
 
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getPosFinaleX() {
+        return posFinaleX;
+    }
+
+    public int getPosFinaleY() {
+        return posFinaleY;
+    }
+    
     public Symboles getSymbole() {
         return symbole;
     }
