@@ -82,8 +82,12 @@ public class Grille {
                     case SABLIER:
                         System.out.print("X");
                         break;
+                    case BOUCLIER:
+                        System.out.print("B");
+                        break;
                     case OBSTACLE:
                         System.out.print("!");
+                        break;
                     default:
                         System.out.print(" ");
                         break;

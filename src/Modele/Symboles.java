@@ -10,5 +10,5 @@ package Modele;
  * @author thiba
  */
 public enum Symboles {
-    VIDE, SOLEIL, SABLIER, LUNE, ETOILE, OBSTACLE
+    VIDE, SOLEIL, SABLIER, LUNE, ETOILE, OBSTACLE, BOUCLIER
 }

@@ -25,6 +25,7 @@ public class InteractionMultiAgent {
         Grille grille = new Grille();
         SymboleAgent soleil = new SymboleAgent(0,3,0,1,grille,Symboles.SOLEIL);
         SymboleAgent sablier = new SymboleAgent(1,2,4,4,grille,Symboles.SABLIER);
+        SymboleAgent bouclier = new SymboleAgent(0, 2, 0,2,grille,Symboles.BOUCLIER);
         SymboleAgent etoile = new SymboleAgent(2,3,3,0,grille,Symboles.ETOILE);
         grille.affichage();
         System.out.println("Début execution");
@@ -35,6 +36,8 @@ public class InteractionMultiAgent {
         executor.execute(sablier);
         sleep(100);
         executor.execute(etoile);
+        sleep(100);
+        executor.execute(bouclier);
 
 
     }
