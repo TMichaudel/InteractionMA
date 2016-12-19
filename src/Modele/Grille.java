@@ -61,12 +61,13 @@ public class Grille {
 
     public void addMessage(Message m) {
         listeMessages.add(m);
+        System.out.println(m.getEmetteur().name()+" a envoyé un message à "+m.getRecepteur().name()+" pour se décaler du "+m.getLibX()+","+m.getLibY());
     }
 
     public ArrayList<Message> getReponses(Symboles s) {
         ArrayList<Message> result = new ArrayList();
         for (Message m : this.listeMessages) {
-            if ((m.getEmetteur().equals(s)) && !(m.getType().equals(MessageTypes.TRAITE))) {
+            if ((m.getEmetteur().equals(s)) && !(m.getReponse().equals(MessageTypes.TRAITE))) {
                 result.add(m);
             }
         }
@@ -76,8 +77,9 @@ public class Grille {
     public ArrayList<Message> getMessages(Symboles s) {
         ArrayList<Message> result = new ArrayList();
         for (Message m : this.listeMessages) {
-            if ((m.getRecepteur().equals(s)) && !(m.getType().equals(MessageTypes.TRAITE))) {
-                result.add(m);
+            if ((m.getRecepteur().equals(s)) && !(m.getReponse().equals(MessageTypes.TRAITE))) {
+                System.out.println("Message trouvé pour "+m.getRecepteur().name());
+            	result.add(m);
             }
         }
         return result;

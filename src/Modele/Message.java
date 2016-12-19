@@ -35,6 +35,18 @@ public class Message {
     public MessageTypes getType() {
         return type;
     }
+    
+    public MessageTypes getReponse() {
+        return reponse;
+    }
+    
+    public void setType(MessageTypes type) {
+        this.type= type;
+    }
+    
+    public void setReponse(MessageTypes rep) {
+        this.reponse= rep;
+    }
 
     public Symboles getEmetteur() {
         return emetteur;
