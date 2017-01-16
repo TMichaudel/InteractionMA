@@ -8,6 +8,7 @@ package Modele;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Point2D;
 
 /**
  *
@@ -22,6 +23,7 @@ public class SymboleAgent extends Thread {
     private Grille grille;
     private Symboles symbole;
     private boolean isSatisfied;
+    private  ArrayList<Point2D> posAEviter;
 
     public SymboleAgent(int posX, int posY, int posFinaleX, int posFinaleY, Grille grille, Symboles symbole) {
         this.isSatisfied = false;
@@ -32,18 +34,20 @@ public class SymboleAgent extends Thread {
         this.grille = grille;
         this.symbole = symbole;
         grille.setCase(posX, posY, this);
+          posAEviter = new ArrayList();
     }
     
     @Override
     public void run() {
+       
         while (!grille.isComplete) {
-        	//consulter retour des messages envoyÈs
+        	//consulter retour des messages envoyes
         	ArrayList<Message> messagesRep = grille.getReponses(symbole);
         	boolean estDeplace = false;
-        	if(!messagesRep.isEmpty()){
+        	if(!messagesRep.isEmpty()){ //On regarde la r√©ponse aux messages envoy√©s aux autres
         		for(int i = 0;i<messagesRep.size();i++){
         			Message m = messagesRep.get(i);
-        			if(m.getReponse()!=MessageTypes.NOTANSWERED) System.out.println(symbole+" a la rÈponse d'un message "+m.getReponse().name());
+        			if(m.getReponse()!=MessageTypes.NOTANSWERED) System.out.println(symbole+" a recu la reponse d'un message pour "+m.getRecepteur()+" : "+m.getReponse().name());
         			if(m.getReponse() == MessageTypes.NON){
         				m.setReponse(MessageTypes.TRAITE);
         			}
@@ -51,53 +55,97 @@ public class SymboleAgent extends Thread {
         				if(grille.getCase(m.getLibX(), m.getLibX()).equals(Symboles.VIDE) && !estDeplace){
         					grille.setCaseVide(posX, posY);
         					posX=m.getLibX(); posY=m.getLibY();
-        	                grille.setCase(posX, posY, this);
-        	                System.out.println("AprËs avoir demandÈ, Symbole "+symbole.name()+" s'est dÈplacÈ en "+posX+","+posY);
-        				}
-        				m.setReponse(MessageTypes.TRAITE);
-        				estDeplace=true;
+                                        grille.setCase(posX, posY, this);
+                                        System.out.println("Apres avoir demande, Symbole "+symbole.name()+" s'est deplace en "+posX+","+posY);
+        				} 
+                                        m.setReponse(MessageTypes.TRAITE);
+                                        estDeplace=true;
         			}
+                                else if(m.getReponse()==MessageTypes.IMPOSSIBLE){   
+                                //Si l'agent bloquant ne peut pas bouger, on bouge al√©atoirement en on labelle cette position comme √©tant bloquante : on l'√©vitera par la suite
+                                    posAEviter.add(new Point2D(posX,posY));
+                                        System.out.println(posX+posY);
+                                            if ((grille.getCase(posX + 1, posY).equals(Symboles.VIDE))) {
+                                            posX++;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX - 1, posY);
+                                        } else if ((grille.getCase(posX - 1, posY).equals(Symboles.VIDE))) {
+                                            posX--;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX + 1, posY);
+                                        } else if ((grille.getCase(posX, posY + 1).equals(Symboles.VIDE))) {
+                                            posY++;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX, posY - 1);
+                                        } else if ((grille.getCase(posX, posY - 1).equals(Symboles.VIDE))) {
+                                            posY--;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX, posY + 1);
+                                        }
+                                        m.setReponse(MessageTypes.TRAITE);
+                                        estDeplace=true;
+                                    }        
+                                        
         		}
         	}
-        	//se dÈplacer
+        	//se deplacer dans un endroit vide et pas consid√©r√© comme un cul-de-sac
             if(!estDeplace){
-        	if ((posX < posFinaleX) && (grille.getCase(posX + 1, posY).equals(Symboles.VIDE))) {
+              if ((posX < posFinaleX) && (grille.getCase(posX + 1, posY).equals(Symboles.VIDE)) && !posAEviter.contains(new Point2D(posX+1,posY))) {
                 posX++;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX - 1, posY);
-            } else if ((posX > posFinaleX) && (grille.getCase(posX - 1, posY).equals(Symboles.VIDE))) {
+            } else if ((posX > posFinaleX) && (grille.getCase(posX - 1, posY).equals(Symboles.VIDE)) && !posAEviter.contains(new Point2D(posX-1,posY))) {
                 posX--;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX + 1, posY);
-            } else if ((posY < posFinaleY) && (grille.getCase(posX, posY + 1).equals(Symboles.VIDE))) {
+            } else if ((posY < posFinaleY) && (grille.getCase(posX, posY + 1).equals(Symboles.VIDE)) && !posAEviter.contains(new Point2D(posX,posY+1))) {
                 posY++;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX, posY - 1);
-            } else if ((posY > posFinaleY) && (grille.getCase(posX, posY - 1).equals(Symboles.VIDE))) {
+            } else if ((posY > posFinaleY) && (grille.getCase(posX, posY - 1).equals(Symboles.VIDE)) && !posAEviter.contains(new Point2D(posX,posY-1))) {
                 posY--;
                 grille.setCase(posX, posY, this);
                 grille.setCaseVide(posX, posY + 1);
             } 
             
             else {
-            	//demander aux agents de se dÈcaler
-                if (posX < posFinaleX) {
+            	//demander aux agents de se decaler
+                if (posX < posFinaleX && !posAEviter.contains(new Point2D(posX+1,posY))) {
                     grille.addMessage(new Message(MessageTypes.DEPLACEMENT, this.getSymbole(),
                             grille.getCase(posX + 1, posY), posX + 1, posY, grille.getIdMessage()));
                     grille.incrementIdMessage();
-                } else if (posX > posFinaleX) {
+                } else if (posX > posFinaleX && !posAEviter.contains(new Point2D(posX-1,posY))) {
                     grille.addMessage(new Message(MessageTypes.DEPLACEMENT, this.getSymbole(),
                             grille.getCase(posX - 1, posY), posX - 1, posY, grille.getIdMessage()));
                     grille.incrementIdMessage();
                 }
-                if (posY < posFinaleY) {
+                if (posY < posFinaleY && !posAEviter.contains(new Point2D(posX,posY+1))) {
                     grille.addMessage(new Message(MessageTypes.DEPLACEMENT, this.getSymbole(),
                             grille.getCase(posX, posY + 1), posX, posY + 1, grille.getIdMessage()));
                     grille.incrementIdMessage();
-                } else if (posY > posFinaleY) {
+                } else if (posY > posFinaleY && !posAEviter.contains(new Point2D(posX,posY-1))) {
                     grille.addMessage(new Message(MessageTypes.DEPLACEMENT, this.getSymbole(),
                             grille.getCase(posX, posY - 1), posX, posY - 1, grille.getIdMessage()));
                     grille.incrementIdMessage();
+                }
+                else if (posX!=posFinaleX && posY != posFinaleY){   //Si le symbole est bloqu√© par les positions √† √©viter on bouge al√©atoirement
+                                        if ((grille.getCase(posX + 1, posY).equals(Symboles.VIDE))) {
+                                            posX++;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX - 1, posY);
+                                        } else if ((grille.getCase(posX - 1, posY).equals(Symboles.VIDE))) {
+                                            posX--;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX + 1, posY);
+                                        } else if ((grille.getCase(posX, posY + 1).equals(Symboles.VIDE))) {
+                                            posY++;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX, posY - 1);
+                                        } else if ((grille.getCase(posX, posY - 1).equals(Symboles.VIDE))) {
+                                            posY--;
+                                            grille.setCase(posX, posY, this);
+                                            grille.setCaseVide(posX, posY + 1);
+                                        }
                 }
             }
         }
@@ -108,42 +156,42 @@ public class SymboleAgent extends Thread {
                 isSatisfied = true;
             }
             grille.checkVictory();
-            //Regarder messages reÁus
+            //Regarder messages recus
             	ArrayList<Message> messages = grille.getMessages(symbole);
             	if(!messages.isEmpty()){
             		for(int i = 0;i<messages.size();i++){
             			Message m =messages.get(i);
-            			System.out.println(symbole+" a reÁu un message de la part de "+m.getEmetteur().name());
+            			System.out.println(symbole+" a recu un message de la part de "+m.getEmetteur().name());
                         if(isSatisfied && m.getType()==MessageTypes.DEPLACEMENT){	
             				if(m.getLibX()==posX && m.getLibY()==posY){
-	            				//Si dÈplacement demandÈ
+	            				//Si deplacement demande
 	            				if ((grille.getCase(posX + 1, posY).equals(Symboles.VIDE))) {
 	            	                posX++;
 	            	                grille.setCase(posX, posY, this);
 	            	                grille.setCaseVide(posX - 1, posY);
-	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est dÈcalÈ du "+m.getLibX()+","+m.getLibY());
+	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est decale du "+m.getLibX()+","+m.getLibY());
 	            	            } else if ((grille.getCase(posX - 1, posY).equals(Symboles.VIDE))) {
 	            	                posX--;
 	            	                grille.setCase(posX, posY, this);
 	            	                grille.setCaseVide(posX + 1, posY);
-	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est dÈcalÈ du "+m.getLibX()+","+m.getLibY());
+	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est decale du "+m.getLibX()+","+m.getLibY());
 	            	            } else if ((grille.getCase(posX, posY + 1).equals(Symboles.VIDE))) {
 	            	                posY++;
 	            	                grille.setCase(posX, posY, this);
 	            	                grille.setCaseVide(posX, posY - 1);
-	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est dÈcalÈ du "+m.getLibX()+","+m.getLibY());
+	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est decale du "+m.getLibX()+","+m.getLibY());
 	            	            } else if ((grille.getCase(posX, posY - 1).equals(Symboles.VIDE))) {
 	            	                posY--;
 	            	                grille.setCase(posX, posY, this);
 	            	                grille.setCaseVide(posX, posY + 1);
-	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est dÈcalÈ du "+m.getLibX()+","+m.getLibY());
+	            	                m.setReponse(MessageTypes.OUI); System.out.println("Symbole "+symbole.name()+" s'est decale du "+m.getLibX()+","+m.getLibY());
 	            	            } else {
-	            	            	System.out.println("DÈplacement impossible");
-	            	            	m.setReponse(MessageTypes.NON);
+	            	            	System.out.println("Deplacement impossible");
+	            	            	m.setReponse(MessageTypes.IMPOSSIBLE);
 	            	            }
             				}
             				else{
-            					System.out.println("Symbole "+symbole.name()+" Ètait dÈj‡ dÈcalÈ");
+            					System.out.println("Symbole "+symbole.name()+" etait deja decale");
             					m.setReponse(MessageTypes.OUI);
             				}
             		}
